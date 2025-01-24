@@ -9,6 +9,7 @@ import {
   Image,
   Pressable,
   Modal,
+  ImageBackground
 } from 'react-native';
 import Bluerectangle from "../assets/Svg/Bluerectangle";
 import { format } from 'date-fns';
@@ -32,11 +33,22 @@ import FirstcardPrice from "../assets/Svg/FirstcardPrice";
 import DownBluerect from '../assets/Svg/DownBluerect';
 import { TouchableOpacity } from 'react-native-web';
 import ThirdGrayrect from '../assets/Svg/ThirdGrayrect';
-import InbetweenLines from "../assets/Svg/InbetweenLines";
+// import InbetweenLines from "../assets/Svg/InbetweenLines";
 import ThirdAmenity from '../assets/Svg/ThirdAmenity';
 import Dullbus from '../assets/Svg/Dullbus';
 import BackGroundArrow from '../assets/Svg/BackGroundArrow';
 import Line from '../assets/Svg/Line';
+import MiddleWhiteRect from '../assets/Svg/MiddleWhiteRect';
+import BrownPlaneBus from '../assets/Svg/BrownPlaneBus';
+import BrownRightArow from '../assets/Svg/BrownRightArrow';
+import BrownLeftArrow from '../assets/Svg/BrownLeftArrow';
+import CenterWhite from '../assets/Svg/CenterWhite';
+import SbltAmenities from '../assets/Svg/SbltAmenities';
+import TopGrayTri from '../assets/Svg/TopGrayTri';
+import MiddleDark from '../assets/Svg/MiddleDark';
+import MiddleBottomTri from '../assets/Svg/MiddleBottomTri';
+import ParveenDowntri from '../assets/Svg/ParveenDownTri';
+
 
 
 const BusDetails = ({ route, navigation }) => {
@@ -47,12 +59,12 @@ const BusDetails = ({ route, navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [logoUrl, setLogoUrl] = useState();
   const formatTime = (dateTime) => {
-    if (!dateTime) return ''; // Handle null or undefined values
-    return format(new Date(dateTime), 'hh:mm '); // Example: 02:30 PM
+    if (!dateTime) return '';
+    return format(new Date(dateTime), 'hh:mm ');
   };
   const formatDateAndMonth = (dateTime) => {
-    if (!dateTime) return ''; // Handle null or undefined values
-    return format(new Date(dateTime), 'dd MMM'); // Example: "10 Jan"
+    if (!dateTime) return '';
+    return format(new Date(dateTime), 'dd MMM');
   };
 
 
@@ -166,65 +178,129 @@ const BusDetails = ({ route, navigation }) => {
         </ScrollView>
       </View>
 
-      {/* Scrollable Seat Container Section */}
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {busData?.map((item, index) => (
-          <View style={styles.seatContainer} key={item.id || index}> {/* Fallback key */}
+          <View key={item.id || index} style={[styles.seatContainer, item.bus_type_status === 'luxury' ? styles.luxuryCard : styles.regularCard]}>
 
-            <Bluerectangle style={styles.Bluerectangle} />
-            <Text style={styles.BusOperatorText}>Bus Operator</Text>
-            <Text style={styles.Operatorname}>{item.operator_name}</Text>
-            {/* {logoUrl && <Image source={{ uri: logoUrl }} style={styles.logo} />} */}
-            <Image source={`${baseUrl}${item.logos}`} style={styles.logo} />
-            <StarOne style={styles.StarOne} />
-            <Text style={styles.Totalseats}>
-              <RedSemiSleeper style={styles.RedSemiSleeper} />
-              {item.seat_availability?.total} Seats Left
-            </Text>
 
-            <Text style={styles.FemaleSeatsText}> {item?.seat_availability?.avlFemale} Female Seats</Text>
+            {item.bus_type_status === 'luxury' ? (
+              <>
 
-            <View style={styles.Durationcontainer}>
-              <BusLeftLine style={styles.BusLeftLine} />
-              <BusPlane style={styles.BusPlane} />
-              <BusRightLine style={styles.BusRightLine} />
-              <Text style={styles.DurationText}>{item.time_duration}</Text>
+                <View style={styles.LuxuryContent}>
+                  <MiddleWhiteRect style={styles.MiddleWhiteRect} />
+                  <BrownPlaneBus style={styles.BrownPlaneBus} />
+                  <BrownRightArow style={styles.BrownRightArow} />
+                  <BrownLeftArrow style={styles.BrownLeftArrow} />
+                  <CenterWhite style={styles.CenterWhite} />
+                  <Text style={styles.LuxuryBusOperatorText}>Bus Operator</Text>
+                  <SbltAmenities style={styles.LuxurySbltAmenities} />
+                  <Text style={styles.LuxuryStartingAt}>Starting @</Text>
+                  <Text style={styles.LuxuryOperatorname}>{item.operator_name}</Text>
+                  <View style={styles.LuxuryDurationcontainer}>
+                    <Text style={styles.LuxuryDurationText}>{item.time_duration}</Text>
+                  </View>
+                  <TopGrayTri style={styles.TopGrayTri} />
+                  <Text style={styles.LuxuryBusType}>{item.bus_type}</Text>
+                  <Text style={styles.LuxuryDepartureTime}>{formatTime(item?.departure_date_time)}</Text>
+                  <Text style={styles.LuxuryArrivalTime}>{formatTime(item?.arrival_date_time)}</Text>
+                  <Text style={styles.LuxuryDepartureDate}>{formatDateAndMonth(item?.departure_date_time)}</Text>
+                  <Text style={styles.LuxuryArrivalDate}>{formatDateAndMonth(item?.arrival_date_time)}</Text>
+                  <FirstcardPrice style={styles.LuxuryFirstcardPrice} />
+                  <Text style={styles.LuxuryFemaleSeatsText}>{item?.seat_availability?.avlFemale} Female Seats</Text>
+                  <Text style={styles.LuxuryTotalseats}>
+                    <RedSemiSleeper style={styles.RedSemiSleeper} />
+                    {item.seat_availability?.total} Seats Left
+                  </Text>
+                  <Line style={styles.LuxuryLine} />
+                  <Pressable style={styles.LuxuryPriceRow} onPress={() => navigation.navigate('JourneyDetails')}>
+                    <Text style={styles.LuxuryPrice}>₹{item?.low_price.price}</Text>
+                    <Image
+                      source={require('../assets/Animation/arrow.gif')}
+                      style={[styles.LuxuryRightArrowTwo, { transform: [{ rotate: '-90deg' }] }]}
+                      resizeMode="contain"
+                    />
+                  </Pressable>
+                  <MiddleDark style={styles.MiddleDark} />
+                  <StarOne style={styles.LuxuryStarOne} />
+                  <Image source={`${baseUrl}${item.logos}`} style={styles.Luxurylogo} />
+                  <MiddleBottomTri style={styles.MiddleBottomTri}/>
+
+                </View>
+
+
+                {/* Transparent Image (it stays behind everything) */}
+                <View style={styles.TransparentCard}>
+                  <Image source={require('../assets/Pictures/cc.png')} style={styles.Transparent} resizeMode="contain" />
+                </View>
+
+              </>
+            ) : (
+              <>
+                {/* Regular Card Content */}
+                <Bluerectangle style={styles.Bluerectangle} />
+                <StarOne style={styles.StarOne} />
+                <BusPlane style={styles.BusPlane} />
+                <BusLeftLine style={styles.BusLeftLine} />
+                <BusRightLine style={styles.BusRightLine} />
+                <Text style={styles.BusOperatorText}>Bus Operator</Text>
+                <DownBluerect style={styles.DownBlueRect} />
+                <ThirdAmenity style={styles.thirdAmenity} />
+                <Text style={styles.StartingAt}>Starting @</Text>
+                <Text style={styles.Operatorname}>{item.operator_name}</Text>
+                <View style={styles.Durationcontainer}>
+                  <Text style={styles.DurationText}>{item.time_duration}</Text>
+                </View>
+                <BlueTri style={styles.BlueTri} />
+                <Text style={styles.BusType}>{item.bus_type}</Text>
+                <Text style={styles.DepartureTime}>{formatTime(item?.departure_date_time)}</Text>
+                <Text style={styles.ArrivalTime}>{formatTime(item?.arrival_date_time)}</Text>
+                <Text style={styles.DepartureDate}>{formatDateAndMonth(item?.departure_date_time)}</Text>
+                <Text style={styles.ArrivalDate}>{formatDateAndMonth(item?.arrival_date_time)}</Text>
+                <FirstcardPrice style={styles.FirstcardPrice} />
+                <Text style={styles.FemaleSeatsText}>{item?.seat_availability?.avlFemale} Female Seats</Text>
+                <Text style={styles.Totalseats}>
+                  <RedSemiSleeper style={styles.RedSemiSleeper} />
+                  {item.seat_availability?.total} Seats Left
+                </Text>
+                <Line style={styles.Line} />
+                <Pressable style={styles.PriceRow} onPress={() => navigation.navigate('JourneyDetails')}>
+                  <Text style={styles.Price}>₹{item?.low_price.price}</Text>
+                  <Image
+                    source={require('../assets/Animation/arrow.gif')}
+                    style={[styles.RightArrowTwo, { transform: [{ rotate: '-90deg' }] }]}
+                    resizeMode="contain"
+                  />
+                </Pressable>
+                <Image source={`${baseUrl}${item.logos}`} style={styles.logo} />
+                <ThirdGrayrect style={styles.ThirdGrayrect} />
+                <ParveenDowntri style={styles.ParveenDowntri}/>
+              </>
+            )}
+
+            {/* Contents above the transparent card */}
+            <View style={styles.ContentAboveTransparentCard}>
+
+              {/* Price Row */}
+
+
+
+
+
             </View>
-
-            <Text style={styles.DepartureTime}>{formatTime(item?.departure_date_time)}</Text>
-            <Text style={styles.ArrivalTime}>{formatTime(item?.arrival_date_time)}</Text>
-
-            <Text style={styles.DepartureDate}> {formatDateAndMonth(item?.departure_date_time)}</Text>
-            <Text style={styles.ArrivalDate}> {formatDateAndMonth(item?.arrival_date_time)}</Text>
-            <FirstcardPrice style={styles.FirstcardPrice} />
-            <DownBluerect style={styles.DownBlueRect} />
-
-
-            <Pressable style={styles.PriceRow} onPress={() => navigation.navigate('JourneyDetails')}>
-              <Text style={styles.StartingAt}>Starting @</Text>
-              <Text style={styles.Price}>₹{item?.low_price.price}</Text>
-              <Image
-                source={require('../assets/Animation/arrow.gif')}
-                style={[styles.RightArrowTwo, { transform: [{ rotate: '-90deg' }] }]}
-                resizeMode="contain" />
-            </Pressable>
-
-            <BlueTri style={styles.BlueTri} />
-
-            <ThirdGrayrect style={styles.ThirdGrayrect} />
-
-            {/* <InbetweenLines style={styles.InbetweenLines} /> */}
-            <ThirdAmenity style={styles.thirdAmenity} />
-            <Line style={styles.Line} />
-            <Text style={styles.BusType}>{item.bus_type}</Text>
-            <Text style={styles.Price}>₹{item?.low_price.price}</Text>
           </View>
         ))}
       </ScrollView>
 
+
     </View>
   );
 };
+
+
+
+
+
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -343,13 +419,42 @@ const styles = StyleSheet.create({
   },
   seatContainer: {
     padding: 15,
-    backgroundColor: 'white',
     borderRadius: 10,
     borderColor: '#ccc',
     borderWidth: 1,
     marginVertical: 10,
     width: '95%',
     marginTop: 20,
+  },
+
+  luxuryCard: {
+    backgroundColor: '#ffdb58',
+    zIndex: 0,
+    position: 'relative',
+    padding: 10,
+  },
+  LuxuryContent: {
+    zIndex: 11, // This ensures the content appears above the transparent card
+    position: 'relative', // Keeps the content in the normal flow above the transparent card
+    paddingTop: 10,
+  },
+  regularCard: {
+    backgroundColor: 'white', // White background for regular buses
+  },
+  LuxuryTotalseats: {
+    color: '#C62B2B',
+    fontWeight: '700',
+    backgroundColor: '#FFC1C1',
+    borderRadius: 15,
+    paddingHorizontal: 8,
+    paddingVertical: 5,
+    alignSelf: 'flex-start',
+    marginLeft: 265,
+    fontSize: 11,
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 35,
+    position: "absolute",
   },
   Totalseats: {
     color: '#C62B2B',
@@ -359,11 +464,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 5,
     alignSelf: 'flex-start',
-    marginLeft: 258,
+    marginLeft: 268,
     fontSize: 11,
     alignItems: "center",
     justifyContent: "center",
-    marginTop: -14,
+    marginTop: 40,
+    position: "absolute",
 
   },
   Bluerectangle: {
@@ -372,6 +478,14 @@ const styles = StyleSheet.create({
     height: 170,
     width: 270,
   },
+  LuxuryOperatorname: {
+    position: 'absolute',
+    color: '#393939',
+    fontWeight: '900',
+    fontSize: 12,
+    marginTop: -17,
+    zIndex: 8,
+  },
   Operatorname: {
     marginTop: -13,
     position: 'absolute',
@@ -379,16 +493,33 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     fontSize: 12,
   },
+  LuxuryBusOperatorText: {
+    color: "#393939",
+    position: "absolute",
+    marginTop: -33,
+    fontSize: 11,
+    fontWeight: "400",
+    zIndex: 8,
+
+  },
   BusOperatorText: {
     color: 'white',
     marginTop: -27,
     position: 'absolute',
     fontSize: 11,
+    fontWeight: "400",
+  },
+  LuxuryStarOne: {
+    width: 94,
+    height: 55,
+    position: "absolute",
+    marginLeft: 270,
+    marginTop: -20,
   },
   StarOne: {
-    marginLeft: 260,
+    marginLeft: 270,
     marginBottom: 5,
-    marginTop: -75,
+    marginTop: -80,
     width: 94,
     height: 55,
   },
@@ -411,9 +542,26 @@ const styles = StyleSheet.create({
     position: 'relative',
     flexDirection: "row",
   },
+  LuxuryDurationcontainer: {
+    position: 'relative',
+    flexDirection: "row",
+    marginTop: 85,
+    marginLeft: 67,
+    zIndex: 11,
+  },
+  LuxuryDurationText: {
+    position: 'absolute',   // Use absolute positioning to place it above
+    top: -33,               // Adjust the value to place it above the BusPlane
+    left: 73,            // Center the text horizontally if needed
+    transform: [{ translateX: -25 }], // To truly center the text (50% width of the text)
+    fontSize: 12,           // Adjust the font size as per your design
+    fontWeight: 'bold',
+    color: "white",
+    zIndex: 11,
+  },
   DurationText: {
     position: 'absolute',   // Use absolute positioning to place it above
-    top: -38,               // Adjust the value to place it above the BusPlane
+    top: -47,               // Adjust the value to place it above the BusPlane
     left: '31%',            // Center the text horizontally if needed
     transform: [{ translateX: -25 }], // To truly center the text (50% width of the text)
     fontSize: 12,           // Adjust the font size as per your design
@@ -423,7 +571,7 @@ const styles = StyleSheet.create({
   BusPlane: {
     width: 60,
     height: 70,
-    marginTop: -60,
+    marginTop: -20,
     marginLeft: 80,
   },
   BlueTri: {
@@ -433,37 +581,70 @@ const styles = StyleSheet.create({
   },
   BusRightLine: {
     //  position:"absolute",
-    marginTop: -35,
-    marginLeft: 2,
+    marginTop: 56,
+    marginLeft: 140,
+    position: "absolute",
   },
   BusLeftLine: {
-    marginTop: -35,
-    marginLeft: 35,
+    marginTop: 57,
+    marginLeft: 48,
+    position: "absolute",
+  },
+  LuxuryFemaleSeatsText: {
+    fontWeight: "700",
+    marginLeft: 270,
+    marginTop: 68,
+    fontSize: 12,
+    color: "#393939",
     position: "absolute",
   },
   FemaleSeatsText: {
     color: "#1f487c",
     fontWeight: "700",
-    marginLeft: 260,
-    marginTop: 8,
+    marginLeft: 270,
+    marginTop: 75,
     fontSize: 12,
+    position: "absolute",
   },
+
   RedSemiSleeper: {
-    marginTop: 0,
+    marginTop: -10,
   },
   ArrivalDate: {
     color: "#1f487c",
     fontWeight: "700",
     marginTop: 45,
     position: "absolute",
-    marginLeft: -10,
+    marginLeft: 180,
+  },
+  LuxuryArrivalDate: {
+    fontWeight: "700",
+    marginTop: 45,
+    position: "absolute",
+    color: "#393939",
+    marginLeft: 215,
+  },
+  LuxuryDepartureDate: {
+    color: "#393939",
+    fontWeight: "700",
+    position: "absolute",
+    marginLeft: 10,
+    marginTop: 45,
   },
   DepartureDate: {
     color: "#1f487c",
     fontWeight: "700",
     position: "absolute",
-    marginLeft: 180,
+    marginLeft: -6,
     marginTop: 45,
+  },
+  LuxuryDepartureTime: {
+    fontWeight: "900",
+    fontSize: 18,
+    position: "absolute",
+    color: "#393939",
+    marginTop: 60,
+    marginLeft: 10,
   },
   DepartureTime: {
     color: "#1f487c",
@@ -471,8 +652,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     position: "absolute",
     marginTop: 65,
-    marginLeft: -6,
+    marginLeft: -7,
 
+  },
+  LuxuryArrivalTime: {
+    fontWeight: "900",
+    position: "absolute",
+    fontSize: 18,
+    color: "#393939",
+    marginLeft: 210,
+    marginTop: 60,
   },
   ArrivalTime: {
     color: "#1f487c",
@@ -482,35 +671,51 @@ const styles = StyleSheet.create({
     marginLeft: 180,
     marginTop: 65,
   },
+  LuxuryFirstcardPrice: {
+    marginLeft: -10,
+    marginTop: -10,
+  },
   FirstcardPrice: {
-    marginLeft: -17,
-    marginTop: -21,
+    marginLeft: -19,
+    marginTop: -19,
   },
   DownBlueRect: {
     marginLeft: 29,
-    marginTop: 107,
-    zIndex: 0, // This will be the base layer
-    position: 'absolute', // Make sure it's absolutely positioned
+    marginTop:41,
+    zIndex: 0,
+    position: 'absolute',
+    height:170,
+    width:360,
   },
 
   ThirdGrayrect: {
-    marginLeft: 235,
-    marginTop: 108,
-    zIndex: 0, // This will be below the Price
-    position: 'absolute', // Absolutely position it relative to the parent
-    pointerEvents: 'none',//prevent this from blocking touch events
+    marginLeft: 240,
+    marginTop:40,
+     zIndex: 1,
+     position: 'absolute', // this ensures the gray rectangle stays in place
+    pointerEvents: 'none',
+    width:150,
+    height:170,
   },
-
-  Price: {
-
+  LuxuryPrice: {
     fontSize: 19,
     fontWeight: '400',
     color: 'white',
-    marginLeft: 250,
-    marginTop: 110,
-    // zIndex: 1, // This should be above the gray rectangle
+    marginLeft: 269,
+    position: 'absolute',
+    marginTop: 68,
+  },
+
+  Price: {
+    fontSize: 19,
+    fontWeight: '400',
+    color: 'white',
+    marginLeft: 255,
+    marginTop: -55,
+    zIndex: 12, // This should be above the gray rectangle
     position: 'absolute',  // Make sure it's absolutely positioned above the other elements
   },
+
 
 
   InbetweenLines: {
@@ -520,43 +725,81 @@ const styles = StyleSheet.create({
   },
   thirdAmenity: {
     position: "absolute",
-    marginTop: 150,
+    marginTop: 140,
     marginLeft: 50,
+    zIndex: 2,
   },
   BackGroundArrow: {
     position: "relative",
   },
-  logo: {
-    width: 36, // Fixed width for the logo
-    height: 36, // Fixed height for the logo
-    // resizeMode: 'contain', // Ensures the image fits within the bounds without distortion
+  Luxurylogo: {
+    width: 37,
+    height: 37,
     marginBottom: 10,
-    marginTop: -33,
-    marginLeft: 200,
     position: "absolute",
+    top: -28,
+    left: 210,
+    zIndex: 10,
+    resizeMode: "contain",
     backgroundColor: "white",
-    borderRadius: 50,
-    padding: 2,
+    borderRadius: 25,
+  },
+
+  logo: {
+    width: 37,
+    height: 37,
+    marginBottom: 10,
+    position: "absolute",
+    top: -20,
+    left: 220,
+    zIndex: 10,
+    resizeMode: "contain",
+    backgroundColor: "white",
+    borderRadius: 25,
+  },
+  LuxuryRightArrowTwo: {
+    height: 70,
+    width: 150,
+    position: "absolute",
+    marginLeft: 288,
+    marginTop: 47,
+
   },
   RightArrowTwo: {
     height: 70,
     width: 150,
     position: "absolute",
-    marginLeft: 270,
-    zIndex: 2,
-    marginTop: -76,
+    marginLeft: 280,
+    marginTop: -76, // adjust this as needed
+    zIndex: 5,
   },
   StartingAt: {
-    marginLeft: 105,
+    marginLeft: 140,
     position: "absolute",
-    marginTop: -55,
+    marginTop: 109,
     fontSize: 20,
     color: "white",
   },
-  Line: {
-    marginLeft: 252,
+  LuxuryStartingAt: {
+    marginTop: 100,
+    marginLeft: 80,
+    position: "absolute",
+    zIndex: 12,
+    fontSize: 20,
+  },
+  LuxuryLine: {
+    marginLeft: 260,
     position: "absolute",
     marginTop: 5,
+  },
+  Line: {
+    marginLeft: 258,
+    position: "absolute",
+    marginTop: 5,
+  },
+  LuxuryBusType: {
+    color: "#393939",
+    position: "absolute",
   },
   BusType: {
     color: "#1f487C",
@@ -564,6 +807,105 @@ const styles = StyleSheet.create({
     marginTop: 7,
     marginLeft: -3,
   },
+  MiddleWhiteRect: {
+    marginTop: -105,
+    position: "absolute",
+    marginLeft: -10,
+    height: 170,
+    width: 270,
+    zIndex: 7,
+  },
+  BrownPlaneBus: {
+    marginTop: 30,
+    marginLeft: 110,
+    position: "absolute",
+    width: 60,
+    height: 70,
+    zIndex: 7,
+
+  },
+  CenterWhite: {
+    marginTop: 100,
+    marginLeft: 40,
+    position: "absolute",
+    zIndex: 7,
+  },
+  LuxurySbltAmenities: {
+    marginTop: 135,
+    position: "absolute",
+    marginLeft: 55,
+  },
+  BrownLeftArrow: {
+    marginLeft: 80,
+    marginTop: 55,
+    position: "absolute",
+  },
+  BrownRightArow: {
+    marginLeft: 172,
+    marginTop: 55,
+    position: "absolute",
+
+
+  },
+  TransparentCard: {
+    zIndex: 0, // This stays in the background
+    position: 'absolute', // Position it absolutely, so it's placed behind other content
+    top: -150,
+    left: 0,
+    width: '100%',
+    height: '100%',
+
+  },
+  Transparent: {
+    width: 392,
+    height: 498,
+    position: 'absolute',
+    left: 0,
+
+  },
+
+  ContentAboveTransparentCard: {
+    zIndex: 11,
+    position: 'relative',
+    paddingTop: 10,
+  },
+  TopGrayTri: {
+    marginTop: -38,
+    position: 'absolute',
+    zIndex: 11,
+    marginLeft: 260,
+  },
+  LuxuryPriceRow: {
+    zIndex: 10,
+    marginTop: 35,
+    position: "absolute",
+  },
+  PriceRow:{
+    zIndex:2,
+  },
+  MiddleDark: {
+    position: "absolute",
+    marginTop: 100,
+    zIndex: 9,
+    marginLeft: 251,
+    height:35,
+    width:150,
+  },
+  MiddleBottomTri:{
+    position:"absolute",
+    marginLeft:370,
+    marginTop:132,
+    width:30,
+    height:30,
+  },
+  ParveenDowntri:{
+    position:"absolute",
+    marginLeft:370,
+    marginTop:144,
+    width:20,
+    height:20,
+  },
+
 
 
   // scrollViewContent: {
